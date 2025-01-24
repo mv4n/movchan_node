@@ -1,0 +1,9 @@
+
+Platform: win32
+Architecture: x64
+CPU Cores: 16
+CPU Model: AMD Ryzen 7 5800H with Radeon Graphics         
+Freemem: 6350008320
+Totalmem: 16476962816
+Homedir: C:\Users\zahar
+Uptime: 19851.64
