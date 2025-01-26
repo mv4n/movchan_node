@@ -12,8 +12,6 @@ const systemInfo = {
     architecture: os.arch(),
     cpuCores: os.cpus().length,
     cpuModel: os.cpus()[0].model,
-    freemem: os.freemem(),
-    totalmem: os.totalmem(),
     homedir: os.homedir(),
     uptime: os.uptime()
 };
