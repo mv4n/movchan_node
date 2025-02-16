@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "server": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -112,5 +113,13 @@
     "utils-merge": "^1.0.1",
     "vary": "^1.1.2"
   },
-  "keywords": []
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mv4n/movchan_node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mv4n/movchan_node/issues"
+  },
+  "homepage": "https://github.com/mv4n/movchan_node#readme"
 }
