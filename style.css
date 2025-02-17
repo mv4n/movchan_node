@@ -20,6 +20,7 @@ body {
     box-shadow: 4px 7px 29px 0 rgba(194,190,194,1);
     border-radius: 30px;
 }
+
 #messages {
     width: 100%;
     border-radius: 20px;
@@ -34,7 +35,6 @@ body {
 }
 
 #sendMessageForm {
-
     border-radius: 20px;
     display: flex;
     flex-direction: column;
@@ -59,15 +59,38 @@ body {
     background-color: lightpink;
 }
 
+/* General message styles */
 .message-item {
     border-radius: 10px;
     background-color: #fff;
     font-size: 16px;
     width: 70%;
     padding: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
+.message-item strong {
+    font-weight: bold;
+}
+
+.message-item span {
+    font-size: 0.8em;
+    color: #888;
+}
+
+/* Style for messages sent by the current user */
 .message-item.mine {
     margin-left: auto;
-    background-color: lightgray;
+    background-color: lightgray; /* Light gray background for user's messages */
+    text-align: right;
+}
+
+.message-item.mine strong {
+    color: #333;
+}
+
+.message-item.mine span {
+    color: #555;
 }

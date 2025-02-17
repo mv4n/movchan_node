@@ -21,20 +21,26 @@ const server = http.createServer((req, res) => {
                 }
                 res.writeHead(200, {
                     'Content-Type': 'text/html',
-                })
+                });
                 res.end(data);
-            })
+            });
             break;
 
         case '/newMessage':
-            const newMessage = searchParams.get('message');
-            if (newMessage) {
+            const messageText = searchParams.get('message');
+            const author = searchParams.get('author');
+            if (messageText && author) {
+                const newMessage = {
+                    id: Date.now(),
+                    author: author,
+                    message: messageText,
+                    time: new Date().toLocaleTimeString(),
+                };
                 messages.push(newMessage);
-                const messagesResponse = JSON.stringify(messages);
                 res.writeHead(200, {
                     'Content-Type': 'application/json',
-                })
-                res.end(messagesResponse);
+                });
+                res.end(JSON.stringify(messages));
             }
             break;
 
@@ -54,9 +60,9 @@ const server = http.createServer((req, res) => {
                 }
                 res.writeHead(200, {
                     'Content-Type': 'text/css',
-                })
+                });
                 res.end(data);
-            })
+            });
             break;
 
         case '/front.js':
@@ -68,9 +74,9 @@ const server = http.createServer((req, res) => {
                 }
                 res.writeHead(200, {
                     'Content-Type': 'text/javascript',
-                })
+                });
                 res.end(data);
-            })
+            });
             break;
 
         case '/favicon.ico':

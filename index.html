@@ -2,27 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="app">
-    <div id="messages">
-
-    </div>
-    <form action="#" id="sendMessageForm">
-        <textarea
-            name="messageText"
-            id="messageText"
-            cols="30"
-            rows="5"
-            placeholder="Type your message here..."
-        >
-        </textarea>
-        <button type="submit" id="messageSubmit">send</button>
+    <div id="messages"></div>
+    <form id="sendMessageForm">
+        <input type="text" id="username" disabled />
+        <textarea id="messageText" placeholder="Type a message" required></textarea>
+        <button type="submit" id="messageSubmit">Send</button>
     </form>
-
-    <script src="front.js"></script>
 </div>
+<script src="front.js"></script>
 </body>
 </html>
