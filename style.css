@@ -24,7 +24,7 @@ body {
     width: 100%;
     border-radius: 20px;
     background-color: lightpink;
-    height: calc(100% - 200px);
+    height: calc(100% - 100px);
     margin-bottom: 20px;
     padding: 10px;
     display: flex;
@@ -38,12 +38,9 @@ body {
     border-radius: 20px;
     display: flex;
     flex-direction: column;
+    height: 100px;
 }
-#userName {
-    padding: 10px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-}
+
 #messageText {
     padding: 10px;
     border-radius: 20px;
