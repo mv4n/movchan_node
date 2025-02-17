@@ -1,0 +1,76 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 300px;
+    padding: 20px;
+    box-shadow: 4px 7px 29px 0 rgba(194,190,194,1);
+    border-radius: 30px;
+}
+#messages {
+    width: 100%;
+    border-radius: 20px;
+    background-color: lightpink;
+    height: calc(100% - 200px);
+    margin-bottom: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 10px;
+}
+
+#sendMessageForm {
+
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+}
+#userName {
+    padding: 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+#messageText {
+    padding: 10px;
+    border-radius: 20px;
+    resize: none;
+    margin-bottom: 10px;
+}
+
+#messageSubmit {
+    border-radius: 20px;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+#messageSubmit:hover {
+    background-color: lightpink;
+}
+
+.message-item {
+    border-radius: 10px;
+    background-color: #fff;
+    font-size: 16px;
+    width: 70%;
+    padding: 7px;
+}
+
+.message-item.mine {
+    margin-left: auto;
+    background-color: lightgray;
+}
