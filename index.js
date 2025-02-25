@@ -34,7 +34,7 @@ wss.on('connection', ws => {
     ws.on('message', message => {
         const msgData = JSON.parse(message);
         if (msgData.type === 'message') {
-            const newMessage = {
+            const newMessage = { //
                 id: Date.now(),
                 author: msgData.author,
                 message: msgData.message,
