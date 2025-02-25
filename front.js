@@ -22,29 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
     messageText.focus();
     messageText.value = '';
 
-    sendMessageForm.addEventListener('submit', e => {
-        e.preventDefault();
-        const message = messageText.value.trim();
-        if (message) {
-            sendMessageForm.messageText.value = '';
-            fetch(`/newMessage?message=${encodeURIComponent(message)}&author=${encodeURIComponent(user)}`, {})
-                .then(response => response.json())
-                .then(data => {
-                    messagesContainer.innerHTML = '';
-                    data.forEach(message => {
-                        const isMine = message.author === user ? 'mine' : '';
-                        messagesContainer.insertAdjacentHTML('beforeend', `
-                            <div class="message-item ${isMine}">
-                                <strong>${message.author}</strong> <span>${message.time}</span>: ${message.message}
-                            </div>
-                        `);
-                    });
-                });
-        }
-    });
-
-    setInterval(() => {
-        fetch(`/getMessages`, {})
+    function loadMessages() {
+        fetch(`/getMessages`)
             .then(response => response.json())
             .then(data => {
                 messagesContainer.innerHTML = '';
@@ -56,6 +35,22 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                     `);
                 });
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
             });
-    }, 1000);
+    }
+
+    loadMessages();
+
+    sendMessageForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const message = messageText.value.trim();
+        if (message) {
+            sendMessageForm.messageText.value = '';
+            fetch(`/newMessage?message=${encodeURIComponent(message)}&author=${encodeURIComponent(user)}`)
+                .then(response => response.json())
+                .then(() => loadMessages());
+        }
+    });
+
+    setInterval(loadMessages, 1000);
 });
