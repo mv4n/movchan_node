@@ -1,94 +1,58 @@
 const http = require('http');
-const url = require('url');
 const fs = require('fs');
 const path = require('path');
+const WebSocket = require('ws');
+
+const server = http.createServer((req, res) => {
+    let filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
+    let extname = path.extname(filePath);
+    let contentType = 'text/html';
+
+    if (extname === '.css') contentType = 'text/css';
+    if (extname === '.js') contentType = 'text/javascript';
+
+    fs.readFile(filePath, (err, data) => {
+        if (err) {
+            res.writeHead(404);
+            res.end('File not found');
+            return;
+        }
+        res.writeHead(200, { 'Content-Type': contentType });
+        res.end(data);
+    });
+});
+
+const wss = new WebSocket.Server({ server });
 
 const messages = [];
 
-const server = http.createServer((req, res) => {
-    const reqURL = url.parse(req.url, true);
-    const pathname = reqURL.pathname;
-    const searchParams = new URLSearchParams(reqURL.search);
+wss.on('connection', ws => {
+    console.log('New client connected');
 
-    switch (pathname) {
+    ws.send(JSON.stringify({ type: 'history', messages }));
 
-        case '/':
-            fs.readFile(path.join(__dirname, 'index.html'), 'utf8', (err, data) => {
-                if (err) {
-                    console.error(err);
-                    res.writeHead(404);
-                    res.end('error');
+    ws.on('message', message => {
+        const msgData = JSON.parse(message);
+        if (msgData.type === 'message') {
+            const newMessage = {
+                id: Date.now(),
+                author: msgData.author,
+                message: msgData.message,
+                time: new Date().toLocaleTimeString(),
+            };
+            messages.push(newMessage);
+
+            wss.clients.forEach(client => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ type: 'message', message: newMessage }));
                 }
-                res.writeHead(200, {
-                    'Content-Type': 'text/html',
-                });
-                res.end(data);
             });
-            break;
+        }
+    });
 
-        case '/newMessage':
-            const messageText = searchParams.get('message');
-            const author = searchParams.get('author');
-            if (messageText && author) {
-                const newMessage = {
-                    id: Date.now(),
-                    author: author,
-                    message: messageText,
-                    time: new Date().toLocaleTimeString(),
-                };
-                messages.push(newMessage);
-                res.writeHead(200, {
-                    'Content-Type': 'application/json',
-                });
-                res.end(JSON.stringify(messages));
-            }
-            break;
-
-        case '/getMessages':
-            res.writeHead(200, {
-                'Content-Type': 'application/json',
-            });
-            res.end(JSON.stringify(messages));
-            break;
-
-        case '/style.css':
-            fs.readFile(path.join(__dirname, 'style.css'), 'utf8', (err, data) => {
-                if (err) {
-                    console.error(err);
-                    res.writeHead(404);
-                    res.end('error');
-                }
-                res.writeHead(200, {
-                    'Content-Type': 'text/css',
-                });
-                res.end(data);
-            });
-            break;
-
-        case '/front.js':
-            fs.readFile(path.join(__dirname, 'front.js'), 'utf8', (err, data) => {
-                if (err) {
-                    console.error(err);
-                    res.writeHead(404);
-                    res.end('error');
-                }
-                res.writeHead(200, {
-                    'Content-Type': 'text/javascript',
-                });
-                res.end(data);
-            });
-            break;
-
-        case '/favicon.ico':
-            res.writeHead(404);
-            res.end('no icon');
-            break;
-
-        default:
-            res.writeHead(404, {'Content-Type': 'text/plain'});
-            res.end("404");
-    }
-
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
 });
 
-server.listen(5000, () => {});
+server.listen(5000, () => console.log('Server is running on http://localhost:5000'));

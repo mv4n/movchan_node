@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!user || user === 'null') {
         user = prompt('Enter your username:');
-
         if (user && user.trim()) {
             localStorage.setItem('username', user);
         } else {
@@ -18,39 +17,49 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     usernameInput.value = user;
-
     messageText.focus();
     messageText.value = '';
 
-    function loadMessages() {
-        fetch(`/getMessages`)
-            .then(response => response.json())
-            .then(data => {
-                messagesContainer.innerHTML = '';
-                data.forEach(message => {
-                    const isMine = message.author === user ? 'mine' : '';
-                    messagesContainer.insertAdjacentHTML('beforeend', `
-                        <div class="message-item ${isMine}">
-                            <strong>${message.author}</strong> <span>${message.time}</span>: ${message.message}
-                        </div>
-                    `);
-                });
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            });
-    }
+    const socket = new WebSocket(`ws://${window.location.host}`);
 
-    loadMessages();
+    socket.onopen = () => {
+        console.log('Connected to WebSocket server');
+    };
+
+    socket.onmessage = event => {
+        const data = JSON.parse(event.data);
+
+        if (data.type === 'history') {
+            messagesContainer.innerHTML = '';
+            data.messages.forEach(message => addMessage(message));
+        }
+
+        if (data.type === 'message') {
+            addMessage(data.message);
+        }
+    };
 
     sendMessageForm.addEventListener('submit', e => {
         e.preventDefault();
         const message = messageText.value.trim();
         if (message) {
-            sendMessageForm.messageText.value = '';
-            fetch(`/newMessage?message=${encodeURIComponent(message)}&author=${encodeURIComponent(user)}`)
-                .then(response => response.json())
-                .then(() => loadMessages());
+            const msgData = {
+                type: 'message',
+                author: user,
+                message: message,
+            };
+            socket.send(JSON.stringify(msgData));
+            messageText.value = '';
         }
     });
 
-    setInterval(loadMessages, 1000);
+    function addMessage(message) {
+        const isMine = message.author === user ? 'mine' : '';
+        messagesContainer.insertAdjacentHTML('beforeend', `
+            <div class="message-item ${isMine}">
+                <strong>${message.author}</strong> <span>${message.time}</span>: ${message.message}
+            </div>
+        `);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
 });
