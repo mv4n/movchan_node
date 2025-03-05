@@ -1,23 +1,14 @@
 
 import {useState} from 'react';
 import './Card.css';
+import changeNumber from '../../changeNumber/changeNumber';
 
 
 function Card({start, step, symbol}) {
     const [n, setN] = useState(start);
 
     function clickBtn() {
-        setN(n => {
-            if (symbol === '*') {
-                return n * step;
-            } else if (symbol === '+') {
-                return n + step;
-            } else if (symbol === '-') {
-                return n - step;
-            } else {
-                return n;
-            }
-        })
+        setN(changeNumber(n, step, symbol));
     }
 
     return (
